@@ -23,10 +23,12 @@ jobs:
       - uses: actions/checkout@v3
       - name: Install dependencies
         run: pip install Flask
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
+      - name: Run SAST test
+        uses: shiftleftsecurity/sast-scan@v2.1.1
         with:
-          languages: python
+          language: python
+          scan-path: .
+          fail-on-error: true
 
   deploy:
     needs: test
