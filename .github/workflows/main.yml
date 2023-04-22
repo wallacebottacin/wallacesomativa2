@@ -1,34 +1,31 @@
 name: Somativa 2 - Devops
 
 on:
-  push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
-    workflow_dispatch:
+    branches:
+      - master
+
+  workflow_dispatch:
 
 jobs:
-  build:
+  build-job:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - run: python3 -V
       - name: Build
-        run: echo "Build concluído com sucesso!"
+        run: echo "Build ok"
 
-  test:
-    needs: build
+  test-job:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Install dependencies
         run: pip install Flask
-      - name: Run SAST test
-        uses: shiftleftsecurity/sast-scan@v2.1.1
+      - run: python3 app.py
+      - uses: AppThreat/sast-scan-action@master
         with:
-          language: python
-          scan-path: .
-          fail-on-error: true
+          type: "python"
 
   deploy:
     needs: test
