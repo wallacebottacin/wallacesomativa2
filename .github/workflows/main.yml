@@ -52,6 +52,5 @@ jobs:
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         run: |
-          echo $DISCORD_WEBHOOK
-          curl -X POST -H 'Content-type: application/json' -d '{"text":"Notificação recebida!"}' "${{ env.DISCORD_WEBHOOK }}"
+          curl -X POST -H 'Content-type: application/json' -d '{"content":"Notificação recebida!"}' "${{ env.DISCORD_WEBHOOK }}"
 
