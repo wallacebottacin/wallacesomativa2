@@ -41,15 +41,17 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build Docker image
+      - name: Docker build
         run: docker build -t wbotta/wallacesomativa2:latest .
 
-      - name: Push Docker image
+      - name: Push na imagem do Docker
         run: docker push wbotta/wallacesomativa2:latest
 
-      - name: Send notification
+      - name: Enviar a notifação para o Discord
         if: github.event_name == 'pull_request' || github.event_name == 'push'
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         run: |
+          echo $DISCORD_WEBHOOK
           curl -X POST -H 'Content-type: application/json' -d '{"text":"Notificação recebida!"}' "${{ env.DISCORD_WEBHOOK }}"
+
