@@ -1,57 +1,57 @@
-  name: Somativa 2 - Devops
+name: Somativa 2 - Devops
 
-  on:
-    pull_request:
-      branches:
-        - main
-
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
     workflow_dispatch:
 
-  jobs:
-    build:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v3
-        - run: python3 -V
-        - name: Build
-          run: echo "Build concluído com sucesso!"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: python3 -V
+      - name: Build
+        run: echo "Build concluído com sucesso!"
 
-    test:
-      needs: build
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v3
-        - name: Install dependencies
-          run: pip install Flask
-        - run: python3 app.py
-        - uses: AppThreat/sast-scan-action@master
-          with:
-            type: "python"
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: pip install Flask
+      - run: python3 app.py
+      - uses: AppThreat/sast-scan-action@master
+        with:
+          type: "python"
 
-    deploy:
-      needs: test
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout code
-          uses: actions/checkout@v3
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-        - name: Log in to Docker Hub
-          uses: docker/login-action@v1
-          with:
-            username: ${{ secrets.DOCKER_HUB_USERNAME }}
-            password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-        - name: Build Docker image
-          run: docker build -t eronbetine/pucpr:latest .
+      - name: Build Docker image
+        run: docker build -t eronbetine/pucpr:latest .
 
-        - name: Push Docker image
-          run: docker push eronbetine/pucpr:latest
+      - name: Push Docker image
+        run: docker push eronbetine/pucpr:latest
 
-        - name: Send notification
-          if: github.event_name == 'pull_request' || github.event_name == 'push'
-          env:
-            DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-          run: |
-            curl -X POST -H 'Content-type: application/json' \
-              --data '{"content": "Uma nova imagem Docker foi publicada!"}' \
-              $DISCORD_WEBHOOK
+      - name: Send notification
+        if: github.event_name == 'pull_request' || github.event_name == 'push'
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+            --data '{"content": "Uma nova imagem Docker foi publicada!"}' \
+            $DISCORD_WEBHOOK
