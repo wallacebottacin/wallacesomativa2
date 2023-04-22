@@ -16,7 +16,7 @@ jobs:
       - name: Build
         run: echo "Build ok"
 
-  test-job:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
