@@ -27,7 +27,6 @@ jobs:
         with:
           type: "python"
 
-
   deploy:
     needs: test
     runs-on: ubuntu-latest
