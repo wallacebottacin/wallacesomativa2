@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Somativa 2 - Wallace Bottacin</title>
+</head>
+<body>
+    <h1>Somativa 2 - Wallace Bottacin</h1>
+    <h2>DevOps - 2023/1</h2>
+    {% if error %}
+        <p>{{ error }}</p>
+    {% endif %}
+    <form method="post">
+        <label for="name">Digite seu nome:</label>
+        <input type="text" id="name" name="name" required>
+        <button type="submit">Enviar</button>
+    </form>
+    {% if greeting %}
+        <p>{{ greeting }}</p>
+    {% endif %}
+</body>
+</html>
